@@ -10,7 +10,7 @@ http://wiki.bitplan.com/index.php/Fritzbox-java-api
 
 ### Distribution
 Available at Maven Central see 
-https://search.maven.org/#search%7Cga%7C1%7Ca%3A%22com.bitplan.fritzbox%22
+https://search.maven.org/#artifactdetails%7Ccom.bitplan%7Ccom.bitplan.fritzbox%7C0.0.1%7Cjar
 
 Maven dependency:
 
