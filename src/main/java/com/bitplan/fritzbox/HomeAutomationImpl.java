@@ -29,7 +29,7 @@ import java.util.List;
  *
  */
 public class HomeAutomationImpl implements HomeAutomation {
-  private final static String BASE_URL = "/webservices/homeautoswitch.lua";
+  public static final String BASE_URL = "/webservices/homeautoswitch.lua";
   private FritzBoxSession session;
  
   /**
@@ -56,7 +56,7 @@ public class HomeAutomationImpl implements HomeAutomation {
    */
   public DeviceList getDeviceListInfos() throws Exception {
     String params=String.format("?switchcmd=getdevicelistinfos");
-    DeviceList deviceList=session.getXmlResult(BASE_URL, params, DeviceList.class);
+    DeviceList deviceList=session.getTypedResponse(BASE_URL, params, DeviceList.class);
     return deviceList;
   }
 

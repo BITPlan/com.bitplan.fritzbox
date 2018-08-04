@@ -20,18 +20,14 @@
  */
 package com.bitplan.fritzbox;
 
-import org.junit.Test;
+import java.util.logging.Logger;
 
 /**
- * allow for coverage tests in debug moe
+ * base class for tests
  * @author wf
  *
  */
-public class TestDebug {
-
-  @Test
-  public void testDebug() {
-    TestSuite.debug=true;
-  }
-
+public class Basetest {
+  // prepare a LOGGER
+  protected static Logger LOGGER = Logger.getLogger("com.bitplan.fritzbox");
 }

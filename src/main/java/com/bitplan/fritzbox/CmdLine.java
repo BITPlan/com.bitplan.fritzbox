@@ -67,6 +67,8 @@ public class CmdLine {
   boolean showVersion = false;
 
   private CmdLineParser parser;
+
+  Fritzbox fritzbox;
   static int exitCode;
   public static boolean testMode = false;
 
@@ -106,6 +108,15 @@ public class CmdLine {
     parser.printUsage(System.err);
     exitCode = 1;
   }
+  
+  /**
+   * print the given error and set the exit Code
+   * @param msg
+   */
+  public void error(String msg) {
+    System.err.println(msg);
+    exitCode=1;
+  }
 
   /**
    * show Help
@@ -118,15 +129,19 @@ public class CmdLine {
    * handle the command line command
    */
   public void doCommand() throws Exception {
-    final Fritzbox fritzbox = Fritzbox.readFromProperties();
+    if (fritzbox==null)
+      fritzbox = FritzboxImpl.readFromProperties();
 
-    if (debug) {
-      LOGGER.log(Level.INFO,String.format("Logging in to %s with username %s", fritzbox.url,
-          fritzbox.username));
+    if (fritzbox==null) {
+      String msg=String.format("no %s found\nYou might want to create one see http://wiki.bitplan.com/index.php/Fritzbox-java-api#Configuration_File",FritzboxImpl.getPropertyFile().getPath());
+      error(msg);
+      return;
     }
-    FritzBoxSession session=new FritzBoxSessionImpl(fritzbox);
-    // login
-    session.login();
+    if (debug) {
+      LOGGER.log(Level.INFO,String.format("Logging in to %s with username %s", fritzbox.getUrl(),
+          fritzbox.getUsername()));
+    }
+    FritzBoxSession session=fritzbox.login();
     final HomeAutomation homeAutomation = new HomeAutomationImpl(session);
 
     final DeviceList deviceList = homeAutomation.getDeviceListInfos();
@@ -205,6 +220,7 @@ public class CmdLine {
       show("switching %s %s", name, powerState);
       homeAutomation.setSwitchOnOff(ain, newState);
     }
+    
   }
 
   /**
@@ -298,7 +314,6 @@ public class CmdLine {
       usage(e.getMessage());
     } catch (final Exception e) {
       handle(e);
-      // System.exit(1);
       exitCode = 1;
     }
     return exitCode;

@@ -20,46 +20,14 @@
  */
 package com.bitplan.fritzbox;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.Properties;
-
 /**
- * Fritzbox information
+ * fritzbox configuration interface
  * @author wf
  *
  */
-public class Fritzbox {
-  public String url;
-  public String username;
-  public String password;
-  
-  /**
-   * get the property file
-   * @return the property file
-   */
-  public static File getPropertyFile() {
-    final String home = System.getProperty("user.home");
-    final File propFile = new File(home + "/.fritzbox/application.properties");
-    return propFile;
-  }
-  
-  /**
-   * read me from application.properties file
-   * @return the fritzbox configuration
-   * @throws Exception 
-   */
-  public static Fritzbox readFromProperties() throws Exception {
-    Fritzbox fritzbox=null;
-    File propFile=getPropertyFile();
-    if (propFile.exists()) {
-      final Properties props= new Properties();
-      props.load(new FileInputStream(propFile));
-      fritzbox=new Fritzbox();
-      fritzbox.url=props.getProperty("fritzbox.url");
-      fritzbox.username=props.getProperty("fritzbox.username");
-      fritzbox.password=props.getProperty("fritzbox.password");
-    }
-    return fritzbox;
-  }
+public interface Fritzbox {
+  public String getUrl();
+  public String getUsername();
+  public String getPassword();
+  public FritzBoxSession login();
 }

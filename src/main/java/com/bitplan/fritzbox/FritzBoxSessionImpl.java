@@ -32,6 +32,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -46,95 +47,111 @@ import org.apache.commons.io.IOUtils;
 
 /**
  * a FritzBox! session
+ * 
  * @author wf
  *
  */
 public class FritzBoxSessionImpl implements FritzBoxSession {
-  
-  public static boolean debug=false;
+
+  public static boolean debug = false;
   // prepare a LOGGER
   protected static Logger LOGGER = Logger.getLogger("com.bitplan.fritzbox");
-  
-  String LOGIN_URL="/login_sid.lua";
-  
-  private static final String DEFAULT_SESSION_ID="0000000000000000";
+
+  String LOGIN_URL = "/login_sid.lua";
+
+  private static final String DEFAULT_SESSION_ID = "0000000000000000";
   private Fritzbox fritzbox;
   Charset UTF_16LE = Charset.forName("utf-16le");
   private SessionInfo sessionInfo;
-  
+  // set to true to create new mockito statements
+  public boolean domockito=false;
+
+  /**
+   * disable SSL
+   */
   private void disableSslVerification() {
-    try
-    {
-        // Create a trust manager that does not validate certificate chains
-        TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager() {
+    try {
+      // Create a trust manager that does not validate certificate chains
+      TrustManager[] trustAllCerts = new TrustManager[] {
+          new X509TrustManager() {
             public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                return null;
+              return null;
             }
-            public void checkClientTrusted(X509Certificate[] certs, String authType) {
+
+            public void checkClientTrusted(X509Certificate[] certs,
+                String authType) {
             }
-            public void checkServerTrusted(X509Certificate[] certs, String authType) {
+
+            public void checkServerTrusted(X509Certificate[] certs,
+                String authType) {
             }
+          } };
+
+      // Install the all-trusting trust manager
+      SSLContext sc = SSLContext.getInstance("SSL");
+      sc.init(null, trustAllCerts, new java.security.SecureRandom());
+      HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
+      // Create all-trusting host name verifier
+      HostnameVerifier allHostsValid = new HostnameVerifier() {
+        public boolean verify(String hostname, SSLSession session) {
+          return true;
         }
-        };
+      };
 
-        // Install the all-trusting trust manager
-        SSLContext sc = SSLContext.getInstance("SSL");
-        sc.init(null, trustAllCerts, new java.security.SecureRandom());
-        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-
-        // Create all-trusting host name verifier
-        HostnameVerifier allHostsValid = new HostnameVerifier() {
-            public boolean verify(String hostname, SSLSession session) {
-                return true;
-            }
-        };
-
-        // Install the all-trusting host verifier
-        HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+      // Install the all-trusting host verifier
+      HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
     } catch (NoSuchAlgorithmException e) {
-        e.printStackTrace();
+      e.printStackTrace();
     } catch (KeyManagementException e) {
-        e.printStackTrace();
+      e.printStackTrace();
     }
-}
-  
- /**
-  * create a FritzBox Session
-  */
-  public FritzBoxSessionImpl(Fritzbox fritzbox) {
-    this.fritzbox=fritzbox;
+  }
+
+  /**
+   * create a FritzBox Session
+   */
+  public FritzBoxSessionImpl(Fritzbox pFritzbox) {
+    this.fritzbox = pFritzbox;
     // https://stackoverflow.com/questions/19540289/how-to-fix-the-java-security-cert-certificateexception-no-subject-alternative
     this.disableSslVerification();
   }
 
   @Override
-  public void login() {
-    
+  public FritzBoxSession login() {
     try {
       sessionInfo = this.getSessionInfo("");
-      String challengeResponse=sessionInfo.Challenge+"-"+this.getMd5(sessionInfo.Challenge+"-"+fritzbox.password);
-      String params=String.format("?username=%s&response=%s", fritzbox.username,challengeResponse);
-      sessionInfo=this.getSessionInfo(params);
+      String challengeResponse = sessionInfo.Challenge + "-"
+          + this.getMd5(sessionInfo.Challenge + "-" + fritzbox.getPassword());
+      String params = String.format("?username=%s&response=%s",
+          fritzbox.getUsername(), challengeResponse);
+      sessionInfo = this.getSessionInfo(params);
+
     } catch (Throwable th) {
-      String msg=th.getMessage();
+      String msg = th.getMessage();
       LOGGER.log(Level.SEVERE, msg, th);
     }
+    return this;
   }
-  
+
   /**
    * get the session info
+   * 
    * @param params
    * @return - the SessionInfo
    * @throws Exception
    * @throws IOException
    */
-  protected SessionInfo getSessionInfo(String params) throws Exception, IOException {
-    SessionInfo sessionInfo=this.getXmlResult(LOGIN_URL, params, SessionInfo.class);
+  protected SessionInfo getSessionInfo(String params)
+      throws Exception, IOException {
+    SessionInfo sessionInfo = this.getTypedResponse(LOGIN_URL, params,
+        SessionInfo.class);
     return sessionInfo;
   }
-  
+
   /**
    * get the XML Result
+   * 
    * @param relativeUrl
    * @param params
    * @param clazz
@@ -142,35 +159,65 @@ public class FritzBoxSessionImpl implements FritzBoxSession {
    * @throws Exception
    */
   @SuppressWarnings("rawtypes")
-  public <T> T getXmlResult(String relativeUrl,String params,Class clazz) throws Exception {
-    String xml=this.getResponse(relativeUrl, params);
-    if (debug)
-      LOGGER.log(Level.INFO, xml);
+  public <T> T getTypedResponse(String relativeUrl, String params, Class clazz)
+      throws Exception {
+    String xml = this.getResponse(relativeUrl, params);
     @SuppressWarnings("unchecked")
-    T result=(T) JAXB.unmarshal(new StringReader(xml), clazz);
+    T result = (T) JAXB.unmarshal(new StringReader(xml), clazz);
     return result;
   }
-  
+
   /**
    * get the response for the given relative Url
+   * 
    * @param relativeUrl
    * @param params
    * @return the response
-   * @throws Exception 
+   * @throws Exception
    */
-  public String getResponse(String relativeUrl, String params) throws  Exception {
-    String response;
-    // if logged in we need to add the session id security parameter
-    String security="";
-    if (this.sessionInfo!=null && !DEFAULT_SESSION_ID.equals(this.sessionInfo.SID)) {
-      security="&sid="+this.sessionInfo.SID;
+  public String getResponse(String relativeUrl, String params)
+      throws Exception {
+    // call the potentially mocked Response handler
+    String response = this.doGetResponse(relativeUrl, params);
+    if (domockito) {
+      // Mockito helper
+      String mockito = String.format(
+          "doReturn(\"%s\").when(session).doGetResponse(\"%s\",\"%s\");",
+          response.replaceAll("\"", Matcher.quoteReplacement("\\\"")),
+          relativeUrl, params
+          );
+      LOGGER.log(Level.INFO, mockito);
     }
-    response = readUrl(fritzbox.url+relativeUrl+params+security);
     return response;
   }
 
-   /**
+  /**
+   * response handler (to be mocked in testcases)
+   * @param relativeUrl
+   * @param params
+   * @return the response
+   * @throws Exception
+   */
+  protected String doGetResponse(String relativeUrl, String params)
+      throws Exception {
+    String response;
+    // if logged in we need to add the session id security parameter
+    String security = "";
+    if (this.sessionInfo != null
+        && !DEFAULT_SESSION_ID.equals(this.sessionInfo.SID)) {
+      security = "&sid=" + this.sessionInfo.SID;
+    }
+    response = readUrl(fritzbox.getUrl() + relativeUrl + params + security);
+    if (debug) {
+      LOGGER.log(Level.INFO, params);
+      LOGGER.log(Level.INFO, response);
+    }
+    return response;
+  }
+
+  /**
    * read from the given url
+   * 
    * @param url
    * @return the string read
    * @throws MalformedURLException
@@ -182,29 +229,32 @@ public class FritzBoxSessionImpl implements FritzBoxSession {
     String response = readResponse(urlStream);
     return response;
   }
-  
+
   /**
    * read a response string from the given input stream
+   * 
    * @param stream
    * @return - the response string
    * @throws IOException
    */
   public static String readResponse(InputStream stream) throws IOException {
-    StringWriter jsonWriter = new StringWriter();
-    IOUtils.copy(stream, jsonWriter, "UTF-8");
-    String response= jsonWriter.toString();
+    StringWriter responseWriter = new StringWriter();
+    IOUtils.copy(stream, responseWriter, "UTF-8");
+    String response = responseWriter.toString();
     stream.close();
+    if (response != null && response.endsWith("\n"))
+      response = response.substring(0, response.length() - 1);
     return response;
   }
 
   @Override
   public void logout() {
-    this.sessionInfo=null;
+    this.sessionInfo = null;
   }
 
   @Override
   public String getMd5(String input) {
-    String md5=DigestUtils.md5Hex(input.getBytes(UTF_16LE));
+    String md5 = DigestUtils.md5Hex(input.getBytes(UTF_16LE));
     return md5;
   }
 

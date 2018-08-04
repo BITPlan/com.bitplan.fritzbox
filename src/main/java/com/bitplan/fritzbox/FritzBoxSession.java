@@ -29,8 +29,9 @@ package com.bitplan.fritzbox;
 public interface FritzBoxSession {
   /**
    * login 
+   * @return the session
    */
-  public void login();
+  public FritzBoxSession login();
 
   /**
    * log out
@@ -53,7 +54,7 @@ public interface FritzBoxSession {
    * @throws Exception 
    */
   @SuppressWarnings("rawtypes")
-  public <T> T getXmlResult(String relativeUrl,String params,Class clazz) throws Exception;
+  public <T> T getTypedResponse(String relativeUrl,String params,Class clazz) throws Exception;
 
   /**
    * get a String response for the given params

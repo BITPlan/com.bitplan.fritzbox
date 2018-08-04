@@ -27,22 +27,44 @@ import org.junit.Test;
  * @author wf
  *
  */
-public class TestCmdLine {
+public class TestCmdLine extends Basetest {
   // adapt to your Fritz Box environment
   public static final String DEVICE_TO_READ="Media";
   
-  @Test
-  public void testCommandLineList() {
-    String args[]= {"-l"};
-    CmdLine cmdLine=new CmdLine();
+  /**
+   * test a Command line with the given args
+   * @throws Exception 
+   */
+  public void testArgs(String args[]) throws Exception{
+    CmdLine cmdLine = new CmdLine();
+    if (!FritzboxImpl.getPropertyFile().exists()) {
+      cmdLine.fritzbox=FritzboxMock.getFritzbox();
+    }
     cmdLine.maininstance(args);
   }
   
   @Test
-  public void testCommandLineRead() {
+  public void testCommandLineList() throws Exception {
+    String args[]= {"-l"};
+    testArgs(args);
+  }
+  
+  @Test
+  public void testCommandLineRead() throws Exception {
     String args[]= {"-r",DEVICE_TO_READ};
-    CmdLine cmdLine=new CmdLine();
-    cmdLine.maininstance(args);
+    testArgs(args);
+  }
+  
+  @Test
+  public void testCommandLineDebug() throws Exception {
+    String args[]= {"-d","-v"};
+    testArgs(args);
+  }
+  
+  @Test
+  public void testCommandLineHelp() throws Exception {
+    String args[]= {"-h"};
+    testArgs(args);
   }
 
 }

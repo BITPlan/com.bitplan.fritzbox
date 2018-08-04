@@ -27,19 +27,14 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.bitplan.fritzbox.DeviceList;
-import com.bitplan.fritzbox.FritzBoxSession;
-import com.bitplan.fritzbox.FritzBoxSessionImpl;
-import com.bitplan.fritzbox.Fritzbox;
-import com.bitplan.fritzbox.HomeAutomationImpl;
-
 /**
  * test the fritz box access
  */
-public class TestFritzBox {
-
-  public static final int EXPECTED_DEVICES=11; // adapt to your fritz box setup
-  public static final int EXPECTED_SWITCHES=10;
+public class TestFritzBox extends Basetest {
+  
+  public static final int EXPECTED_DEVICES = 11; // adapt to your fritz box
+                                                 // setup
+  public static final int EXPECTED_SWITCHES = 10;
   private FritzBoxSession session = null;
 
   /**
@@ -48,14 +43,20 @@ public class TestFritzBox {
    * @return the session
    */
   public FritzBoxSession getFritzBox() throws Exception {
+    FritzBoxSessionImpl.debug = TestSuite.debug;
     if (session == null) {
-      Fritzbox fritzbox = Fritzbox.readFromProperties();
-      if (fritzbox != null) {
-        assertNotNull("There should be a url in the fritzbox configuration", fritzbox.url);
-        assertNotNull("There should be a password in the fritzbox configuration", fritzbox.password);
-        assertNotNull("There should be a username in the fritzbox configuration", fritzbox.username);
-        session = new FritzBoxSessionImpl(fritzbox);
-        session.login();
+      Fritzbox fritzbox = FritzboxImpl.readFromProperties();
+      if (fritzbox == null) {
+        fritzbox=FritzboxMock.getFritzbox();
+      }
+      assertNotNull("There should be a url in the fritzbox configuration",
+          fritzbox.getUrl());
+      assertNotNull("There should be a password in the fritzbox configuration",
+          fritzbox.getPassword());
+      assertNotNull("There should be a username in the fritzbox configuration",
+          fritzbox.getUsername());
+      if (session == null) {
+        session=fritzbox.login();
       }
     }
     return session;
@@ -63,8 +64,8 @@ public class TestFritzBox {
 
   @Test
   public void testLogin() throws Exception {
-    FritzBoxSessionImpl.debug = TestSuite.debug;
     FritzBoxSession lsession = getFritzBox();
+    assertNotNull(lsession);
     if (lsession != null) {
       lsession.logout();
       session = null;
@@ -73,19 +74,18 @@ public class TestFritzBox {
 
   @Test
   public void testHomeAutomation() throws Exception {
-    FritzBoxSessionImpl.debug = TestSuite.debug;
     FritzBoxSession lsession = getFritzBox();
     if (lsession != null) {
       HomeAutomationImpl homeAutomation = new HomeAutomationImpl(session);
-      FritzBoxSessionImpl.debug = true;
       List<String> switches = homeAutomation.getSwitchList();
       assertNotNull(switches);
-      assertEquals(EXPECTED_SWITCHES,switches.size());
+      assertEquals(EXPECTED_SWITCHES, switches.size());
+      FritzBoxSessionImpl.debug=true;
       DeviceList deviceList = homeAutomation.getDeviceListInfos();
       assertEquals(1, deviceList.version);
       assertNotNull(deviceList.devices);
       assertEquals(EXPECTED_DEVICES, deviceList.devices.size());
-      for (Device device:deviceList.devices) {
+      for (Device device : deviceList.devices) {
         if (TestSuite.debug) {
           System.out.println(device);
         }
@@ -97,7 +97,7 @@ public class TestFritzBox {
 
   @Test
   public void testMd5() {
-    FritzBoxSession session = new FritzBoxSessionImpl(new Fritzbox());
+    FritzBoxSession session = new FritzBoxSessionImpl(new FritzboxImpl());
 
     String inputs[] = { "secret1", "", "test1", "12345678z-äbc",
         "!\"§$%&/()=?ßüäöÜÄÖé-.,;:_`´+*#'<>≤|" };
