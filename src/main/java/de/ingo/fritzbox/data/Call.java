@@ -96,18 +96,18 @@ public class Call implements Serializable {
   }
 
   /**
-   * Gives the substation name.
+   * Gives the sub station name.
    *
-   * @return The name of the substation as string object.
+   * @return The name of the sub station as string object.
    */
   public String getSubstationName() {
     return this.substation;
   }
 
   /**
-   * Gives the substation number.
+   * Gives the sub station number.
    *
-   * @return The number of the substation as string object.
+   * @return The number of the sub station as string object.
    */
   public String getSubstationNumber() {
     return this.substationNumber;
@@ -139,7 +139,7 @@ public class Call implements Serializable {
   public static class Builder implements Serializable {
 
     private static final long serialVersionUID = -8476721398229927890L;
-    private CallType type = CallType.UNKNOWEN;
+    private CallType type = CallType.UNKNOWN;
     private Date date;
     private String callerName;
     private String callerNumber;
@@ -246,10 +246,10 @@ public class Call implements Serializable {
     }
 
     /**
-     * Sets the substation number.
+     * Sets the sub station number.
      *
      * @param substationNumber
-     *            The substation number as string object.
+     *            The sub station number as string object.
      * @return The Builder instance. (Fluent-API)
      */
     public Builder substationNumber(final String substationNumber) {
