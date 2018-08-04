@@ -44,7 +44,7 @@ public class CmdLine {
   // prepare a LOGGER
   protected static Logger LOGGER = Logger.getLogger("com.bitplan.fritzbox");
 
-  public static final String VERSION = "0.0.1";
+  public static final String VERSION = "0.0.2";
 
   @Option(name = "-d", aliases = {
       "--debug" }, usage = "debug\ncreate additional debug output if this switch is used")

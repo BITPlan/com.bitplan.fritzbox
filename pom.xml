@@ -6,7 +6,7 @@
 	<artifactId>com.bitplan.fritzbox</artifactId>
 	<packaging>jar</packaging>
 	<name>BITPlan Java API for FritzBox HomeAutomation</name>
-	<version>0.0.1</version>
+	<version>0.0.2</version>
 	<description>Java library to call FritzBox HomeAutomation Api</description>
 	<url>https://github.com/BITPlan/com.bitplan.fritzbox</url>
 	<licenses>
@@ -43,7 +43,8 @@
 		<commons.io.version>2.4</commons.io.version>
 		<commons.version>3.4</commons.version>
 		<args4j.version>2.33</args4j.version>
-		<maven-site-plugin.version>3.6</maven-site-plugin.version>
+		<!-- https://stackoverflow.com/a/51099913/1497139 -->
+		<maven.site.plugin.version>3.7.1</maven.site.plugin.version>
 	</properties>
 	<dependencies>
 		<!-- commons io -->
@@ -239,34 +240,10 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
-				<version>${maven-site-plugin.version}</version>
-				<configuration>
-					<!-- configuration of reports to be included in site -->
-					<reportPlugins>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-project-info-reports-plugin</artifactId>
-							<configuration>
-								<dependencyDetailsEnabled>true</dependencyDetailsEnabled>
-								<dependencyLocationsEnabled>true</dependencyLocationsEnabled>
-							</configuration>
-						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-javadoc-plugin</artifactId>
-						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-surefire-report-plugin</artifactId>
-						</plugin>
-						<!-- http://maven.apache.org/plugins/maven-checkstyle-plugin/usage.html -->
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-checkstyle-plugin</artifactId>
-						</plugin>
-					</reportPlugins>
-				</configuration>
+				<version>${maven.site.plugin.version}</version>
 			</plugin>
+
+
 			<!-- git hub site plugin https://github.com/github/maven-plugins -->
 			<plugin>
 				<groupId>com.github.github</groupId>
@@ -275,7 +252,7 @@
 				<configuration>
 					<message>Creating site for ${project.version}</message>
 					<repositoryName>com.bitplan.fritzbox</repositoryName>      <!-- github repo name -->
-					<repositoryOwner>BITPlan</repositoryOwner>    <!-- github username -->
+					<repositoryOwner>WolfgangFahl</repositoryOwner>    <!-- github username -->
 				</configuration>
 				<executions>
 					<execution>
@@ -363,6 +340,42 @@
 			</plugin>
 		</plugins>
 	</build>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>${maven.site.plugin.version}</version>
+				<configuration>
+					<!-- configurationmvn si of reports to be included in site -->
+					<reportPlugins>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-project-info-reports-plugin</artifactId>
+							<version>3.0.0</version>
+							<configuration>
+								<dependencyDetailsEnabled>true</dependencyDetailsEnabled>
+								<dependencyLocationsEnabled>true</dependencyLocationsEnabled>
+							</configuration>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-javadoc-plugin</artifactId>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-surefire-report-plugin</artifactId>
+						</plugin>
+						<!-- http://maven.apache.org/plugins/maven-checkstyle-plugin/usage.html -->
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-checkstyle-plugin</artifactId>
+						</plugin>
+					</reportPlugins>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
 	<profiles>
 		<!-- Work around Oracle's (IMHO silly) decision to make doclint default. 
 			http://blog.joda.org/2014/02/turning-off-doclint-in-jdk-8-javadoc.html http://stackoverflow.com/questions/15886209/maven-is-not-working-in-java-8-when-javadoc-tags-are-incomplete -->
