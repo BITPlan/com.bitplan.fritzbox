@@ -22,10 +22,13 @@ package com.bitplan.fritzbox;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
 import org.junit.Test;
+
+import de.ingo.fritzbox.data.Call;
 
 /**
  * test the fritz box access
@@ -80,7 +83,7 @@ public class TestFritzBox extends Basetest {
       List<String> switches = homeAutomation.getSwitchList();
       assertNotNull(switches);
       assertEquals(EXPECTED_SWITCHES, switches.size());
-      FritzBoxSessionImpl.debug=true;
+      // FritzBoxSessionImpl.debug=true;
       DeviceList deviceList = homeAutomation.getDeviceListInfos();
       assertEquals(1, deviceList.version);
       assertNotNull(deviceList.devices);
@@ -109,6 +112,19 @@ public class TestFritzBox extends Basetest {
       String md5 = session.getMd5(inputs[i]);
       // System.out.println(inputs[i]+"="+md5);
       assertEquals(expected[i], md5);
+    }
+  }
+  
+  @Test
+  public void testCallList() throws Throwable {
+    FritzBoxSession lsession = getFritzBox();
+    if (lsession != null) {
+      // FritzBoxSessionImpl.debug=true;
+      // FritzBoxSessionImpl.domockito=true;
+      CallList callList=new CallListImpl(session);
+      List<Call> calls = callList.getCallList();
+      assertNotNull(calls);
+      assertTrue(calls.size()>=2);
     }
   }
 

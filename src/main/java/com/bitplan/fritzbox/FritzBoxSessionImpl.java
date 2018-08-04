@@ -64,7 +64,7 @@ public class FritzBoxSessionImpl implements FritzBoxSession {
   Charset UTF_16LE = Charset.forName("utf-16le");
   private SessionInfo sessionInfo;
   // set to true to create new mockito statements
-  public boolean domockito=false;
+  public static boolean domockito=false;
 
   /**
    * disable SSL

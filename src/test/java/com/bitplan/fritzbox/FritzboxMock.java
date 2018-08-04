@@ -90,6 +90,11 @@ public class FritzboxMock {
     doReturn("198190").when(session).doGetResponse("/webservices/homeautoswitch.lua","?switchcmd=getswitchenergy&ain=087610420054");
     doReturn("265").when(session).doGetResponse("/webservices/homeautoswitch.lua","?switchcmd=gettemperature&ain=087610420054");
 
+    // CallList
+    doReturn("sep=;\n" + 
+        "Typ;Datum;Name;Rufnummer;Nebenstelle;Eigene Rufnummer;Dauer\n" + 
+        "1;03.08.18 20:23;Reiner Notbogen;02154999999;My AB;Internet: 999999;0:01\n" + 
+        "4;03.08.18 12:37;;02154999999;999 Kitchen;Internet: 999999;0:02\n").when(session).doGetResponse("/fon_num/foncalls_list.lua","?csv=");
     return fritzbox;
   }
 

@@ -32,6 +32,8 @@ import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 import org.kohsuke.args4j.spi.StringArrayOptionHandler;
 
+import de.ingo.fritzbox.data.Call;
+
 /**
  * command line interface for home automation
  * 
@@ -50,6 +52,10 @@ public class CmdLine {
 
   @Option(name = "-h", aliases = { "--help" }, usage = "help\nshow this usage")
   boolean showHelp = false;
+
+  @Option(name = "-c", aliases = {
+      "--calllist" }, usage = "call list\nget the call list")
+  boolean doGetCallList = false;
 
   @Option(name = "-l", aliases = { "--list" }, usage = "list\nlist devices")
   boolean listDevices = false;
@@ -108,14 +114,15 @@ public class CmdLine {
     parser.printUsage(System.err);
     exitCode = 1;
   }
-  
+
   /**
    * print the given error and set the exit Code
+   * 
    * @param msg
    */
   public void error(String msg) {
     System.err.println(msg);
-    exitCode=1;
+    exitCode = 1;
   }
 
   /**
@@ -127,100 +134,111 @@ public class CmdLine {
 
   /**
    * handle the command line command
+   * @throws Throwable 
    */
-  public void doCommand() throws Exception {
-    if (fritzbox==null)
+  public void doCommand() throws Throwable {
+    if (fritzbox == null)
       fritzbox = FritzboxImpl.readFromProperties();
 
-    if (fritzbox==null) {
-      String msg=String.format("no %s found\nYou might want to create one see http://wiki.bitplan.com/index.php/Fritzbox-java-api#Configuration_File",FritzboxImpl.getPropertyFile().getPath());
+    if (fritzbox == null) {
+      String msg = String.format(
+          "no %s found\nYou might want to create one see http://wiki.bitplan.com/index.php/Fritzbox-java-api#Configuration_File",
+          FritzboxImpl.getPropertyFile().getPath());
       error(msg);
       return;
     }
     if (debug) {
-      LOGGER.log(Level.INFO,String.format("Logging in to %s with username %s", fritzbox.getUrl(),
-          fritzbox.getUsername()));
+      LOGGER.log(Level.INFO, String.format("Logging in to %s with username %s",
+          fritzbox.getUrl(), fritzbox.getUsername()));
     }
-    FritzBoxSession session=fritzbox.login();
-    final HomeAutomation homeAutomation = new HomeAutomationImpl(session);
+    FritzBoxSession session = fritzbox.login();
+    if (this.doGetCallList) {
+      final CallList callList = new CallListImpl(session);
+      List<Call> calls = callList.getCallList();
+      for (Call call:calls) {
+        System.out.println(call);
+      }
+    } else {
+      final HomeAutomation homeAutomation = new HomeAutomationImpl(session);
 
-    final DeviceList deviceList = homeAutomation.getDeviceListInfos();
-    if (debug) {
-      LOGGER.log(Level.INFO,String.format("Found %s devices", deviceList.devices.size()));
+      final DeviceList deviceList = homeAutomation.getDeviceListInfos();
+      if (debug) {
+        LOGGER.log(Level.INFO,
+            String.format("Found %s devices", deviceList.devices.size()));
+        for (final Device device : deviceList.devices) {
+          LOGGER.log(Level.INFO, String.format("\t%s", device));
+        }
+      }
+
+      final List<String> ids = homeAutomation.getSwitchList();
+      if (debug) {
+        LOGGER.log(Level.INFO,
+            String.format("Found %3d device ids: %s", ids.size(), ids));
+      }
+
+      if (deviceList.devices.isEmpty()) {
+        session.logout();
+        return;
+      }
+
+      if (listDevices) {
+        show("%20s | %10s | %25s | %s", "Name", "By", "Product", "Identifier");
+        show("%21s+%12s+%27s+%s", dash(21), dash(12), dash(27), dash(25));
+        for (final Device device : deviceList.devices) {
+          show("%20s | %10s | %25s | %s", device.name, device.manufacturer,
+              device.productname, device.identifier);
+        }
+      }
+      final Map<String, String> ainByName = new HashMap<>();
       for (final Device device : deviceList.devices) {
-        LOGGER.log(Level.INFO,String.format("\t%s", device));
+        ainByName.put(device.name, device.getAin());
       }
-    }
+      /**
+       * loop over all devices to be read
+       */
+      for (final String readDevice : readDevices) {
+        // devices can be specified by name or id
+        String ain = readDevice;
+        // check if a name was given
+        if (ainByName.containsKey(ain)) {
+          // get the ain for the name
+          ain = ainByName.get(ain);
+        }
+        readSwitch(homeAutomation, ain);
+      }
 
-    final List<String> ids = homeAutomation.getSwitchList();
-    if (debug) {
-      LOGGER.log(Level.INFO,String.format("Found %3d device ids: %s", ids.size(), ids));
-    }
-
-    if (deviceList.devices.isEmpty()) {
-      session.logout();
-      return;
-    }
-
-    if (listDevices) {
-      show("%20s | %10s | %25s | %s", "Name", "By", "Product", "Identifier");
-      show("%21s+%12s+%27s+%s", dash(21), dash(12), dash(27), dash(25));
-      for (final Device device : deviceList.devices) {
-        show("%20s | %10s | %25s | %s", device.name,
-            device.manufacturer, device.productname,
-            device.identifier);
+      /**
+       * loop over all devices to be set
+       */
+      if (setDevices.size() % 2 != 0) {
+        usage("set needs pairs of name=on/off");
+      }
+      for (int i = 0; i < setDevices.size(); i += 2) {
+        final String name = setDevices.get(i);
+        final String powerState = setDevices.get(i + 1);
+        // check if a name was given
+        String ain = name;
+        if (ainByName.containsKey(ain)) {
+          // get the ain for the name
+          ain = ainByName.get(ain);
+        }
+        boolean newState = false;
+        switch (powerState) {
+        case "on":
+          newState = true;
+          break;
+        case "off":
+          newState = false;
+          break;
+        default:
+          usage(String.format(
+              "%s is not a valid powerState it needs to be on or off",
+              powerState));
+        }
+        show("switching %s %s", name, powerState);
+        homeAutomation.setSwitchOnOff(ain, newState);
       }
     }
-    final Map<String, String> ainByName = new HashMap<>();
-    for (final Device device : deviceList.devices) {
-      ainByName.put(device.name, device.getAin());
-    }
-    /**
-     * loop over all devices to be read
-     */
-    for (final String readDevice : readDevices) {
-      // devices can be specified by name or id
-      String ain = readDevice;
-      // check if a name was given
-      if (ainByName.containsKey(ain)) {
-        // get the ain for the name
-        ain = ainByName.get(ain);
-      }
-      readSwitch(homeAutomation, ain);
-    }
-
-    /**
-     * loop over all devices to be set
-     */
-    if (setDevices.size() % 2 != 0) {
-      usage("set needs pairs of name=on/off");
-    }
-    for (int i = 0; i < setDevices.size(); i += 2) {
-      final String name = setDevices.get(i);
-      final String powerState = setDevices.get(i + 1);
-      // check if a name was given
-      String ain = name;
-      if (ainByName.containsKey(ain)) {
-        // get the ain for the name
-        ain = ainByName.get(ain);
-      }
-      boolean newState = false;
-      switch (powerState) {
-      case "on":
-        newState = true;
-        break;
-      case "off":
-        newState = false;
-        break;
-      default:
-        usage(String.format(
-            "%s is not a valid powerState it needs to be on or off",
-            powerState));
-      }
-      show("switching %s %s", name, powerState);
-      homeAutomation.setSwitchOnOff(ain, newState);
-    }
-    
   }
 
   /**
@@ -229,16 +247,16 @@ public class CmdLine {
    * @param homeAutomation
    * @param ain
    *          - the identification of the switch
-   * @throws Exception 
+   * @throws Exception
    */
-  private void readSwitch(HomeAutomation homeAutomation, String ain) throws Exception {
+  private void readSwitch(HomeAutomation homeAutomation, String ain)
+      throws Exception {
     show(" name: %s", homeAutomation.getSwitchName(ain));
     show("   id: %s ", ain);
     show("alive: %s", homeAutomation.getSwitchPresent(ain));
     show("   on: %s", homeAutomation.getSwitchState(ain));
     show(" uses: %5.0f     W", homeAutomation.getSwitchPowerWatt(ain));
-    show(" used: %9.3f kWh",
-        homeAutomation.getSwitchEnergy(ain) / 1000.0);
+    show(" used: %9.3f kWh", homeAutomation.getSwitchEnergy(ain) / 1000.0);
     show(" temp: %7.1f   °C", homeAutomation.getTemperature(ain));
     show("");
   }
@@ -284,7 +302,7 @@ public class CmdLine {
    * @throws Exception
    *           if a problem occurs
    */
-  protected void work() throws Exception {
+  protected void work() throws Throwable {
     if (this.showVersion || this.debug) {
       showVersion();
     }
@@ -312,8 +330,8 @@ public class CmdLine {
     } catch (final CmdLineException e) {
       // handling of wrong arguments
       usage(e.getMessage());
-    } catch (final Exception e) {
-      handle(e);
+    } catch (final Throwable th) {
+      handle(th);
       exitCode = 1;
     }
     return exitCode;
