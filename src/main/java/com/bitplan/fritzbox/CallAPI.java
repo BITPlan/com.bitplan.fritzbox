@@ -24,7 +24,12 @@ import java.util.List;
 
 import de.ingo.fritzbox.data.Call;
 
-public interface CallList {
+/**
+ * FritzBox Call API
+ * @author wf
+ *
+ */
+public interface CallAPI {
   /**
    * Requests the call list from the FritzBox and returns it.
    *
@@ -33,4 +38,12 @@ public interface CallList {
    *           when an exception during communication occurred.
    */
   public List<Call> getCallList() throws Throwable;
+  
+  /**
+   * dial the given number
+   * @param number
+   * @throws Exception
+   */
+  public void dial(String number) throws Exception;
+
 }

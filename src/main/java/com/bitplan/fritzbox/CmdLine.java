@@ -153,7 +153,7 @@ public class CmdLine {
     }
     FritzBoxSession session = fritzbox.login();
     if (this.doGetCallList) {
-      final CallList callList = new CallListImpl(session);
+      final CallAPI callList = new CallAPIImpl(session);
       List<Call> calls = callList.getCallList();
       for (Call call:calls) {
         System.out.println(call);
