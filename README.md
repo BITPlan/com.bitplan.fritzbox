@@ -10,7 +10,7 @@ http://wiki.bitplan.com/index.php/Fritzbox-java-api
 
 ### Distribution
 Available at Maven Central see 
-https://search.maven.org/#artifactdetails%7Ccom.bitplan%7Ccom.bitplan.fritzbox%7C0.0.1%7Cjar
+https://search.maven.org/#artifactdetails%7Ccom.bitplan%7Ccom.bitplan.fritzbox%7C0.0.2%7Cjar
 
 Maven dependency:
 
@@ -18,7 +18,7 @@ Maven dependency:
 <dependency>
 	<groupId>com.bitplan.</groupId>
 	<artifactId>com.bitplan.fritzbox</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2</version>
 </dependency>
 ```
 
@@ -30,4 +30,5 @@ mvn install
 ```
 
 ## Version history
-*  0.0.1: 2018-08-04 First release via GitHub / Maven central
+* 0.0.1: 2018-08-04 First release via GitHub / Maven central
+* 0.0.2: 2018-08-07 adds call list option
