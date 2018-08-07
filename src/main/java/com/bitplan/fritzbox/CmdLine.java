@@ -139,7 +139,7 @@ public class CmdLine {
   public void doCommand() throws Throwable {
     FritzBoxSession session=FritzBoxSessionImpl.getInstance();
     if (this.doGetCallList) {
-      final CallList callList = new CallListImpl(session);
+      final CallAPI callList = new CallAPIImpl(session);
       List<Call> calls = callList.getCallList();
       for (Call call:calls) {
         System.out.println(call);

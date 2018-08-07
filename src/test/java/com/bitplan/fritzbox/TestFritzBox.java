@@ -121,7 +121,7 @@ public class TestFritzBox extends Basetest {
     if (lsession != null) {
       // FritzBoxSessionImpl.debug=true;
       // FritzBoxSessionImpl.domockito=true;
-      CallList callList=new CallListImpl(session);
+      CallAPI callList=new CallAPIImpl(session);
       List<Call> calls = callList.getCallList();
       assertNotNull(calls);
       assertTrue(calls.size()>=2);

@@ -28,17 +28,21 @@ import de.ingo.fritzbox.data.Call;
 import de.ingo.fritzbox.utils.CsvParser;
 
 /**
- * access to call list
+ * access to call API
  * @author wf
  *
  */
-public class CallListImpl implements CallList {
+public class CallAPIImpl implements CallAPI {
   // prepare a LOGGER
   protected static Logger LOGGER = Logger.getLogger("com.bitplan.fritzbox");
   
   private FritzBoxSession session;
 
-  public CallListImpl(FritzBoxSession session) {
+  /**
+   * construct me from a FritzBox Session
+   * @param session
+   */
+  public CallAPIImpl(FritzBoxSession session) {
     this.session = session;
   }
 
@@ -60,5 +64,11 @@ public class CallListImpl implements CallList {
       LOGGER.log(Level.SEVERE, th.getMessage(), th);
       throw th;
     }
+  }
+
+  @Override
+  public void dial(String number) throws Exception {
+    
+    
   }
 }
