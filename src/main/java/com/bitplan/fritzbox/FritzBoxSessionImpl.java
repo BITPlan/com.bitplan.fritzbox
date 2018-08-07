@@ -51,7 +51,8 @@ import org.apache.commons.io.IOUtils;
  * @author wf
  *
  */
-public class FritzBoxSessionImpl implements FritzBoxSession {
+public class FritzBoxSessionImpl
+    implements FritzBoxSession, FritzBoxSessionBuilder {
 
   public static boolean debug = false;
   // prepare a LOGGER
@@ -64,7 +65,7 @@ public class FritzBoxSessionImpl implements FritzBoxSession {
   Charset UTF_16LE = Charset.forName("utf-16le");
   private SessionInfo sessionInfo;
   // set to true to create new mockito statements
-  public static boolean domockito=false;
+  public static boolean domockito = false;
 
   /**
    * disable SSL
@@ -111,10 +112,17 @@ public class FritzBoxSessionImpl implements FritzBoxSession {
   /**
    * create a FritzBox Session
    */
-  public FritzBoxSessionImpl(Fritzbox pFritzbox) {
-    this.fritzbox = pFritzbox;
+  public FritzBoxSessionImpl() {
     // https://stackoverflow.com/questions/19540289/how-to-fix-the-java-security-cert-certificateexception-no-subject-alternative
     this.disableSslVerification();
+  }
+
+  /**
+   * create a FritzBox Session
+   */
+  public FritzBoxSessionImpl(Fritzbox pFritzbox) {
+    this();
+    this.fritzbox = pFritzbox;
   }
 
   @Override
@@ -184,8 +192,7 @@ public class FritzBoxSessionImpl implements FritzBoxSession {
       String mockito = String.format(
           "doReturn(\"%s\").when(session).doGetResponse(\"%s\",\"%s\");",
           response.replaceAll("\"", Matcher.quoteReplacement("\\\"")),
-          relativeUrl, params
-          );
+          relativeUrl, params);
       LOGGER.log(Level.INFO, mockito);
     }
     return response;
@@ -193,6 +200,7 @@ public class FritzBoxSessionImpl implements FritzBoxSession {
 
   /**
    * response handler (to be mocked in testcases)
+   * 
    * @param relativeUrl
    * @param params
    * @return the response
@@ -256,6 +264,32 @@ public class FritzBoxSessionImpl implements FritzBoxSession {
   public String getMd5(String input) {
     String md5 = DigestUtils.md5Hex(input.getBytes(UTF_16LE));
     return md5;
+  }
+
+  @Override
+  public FritzBoxSession createNewSession() throws Exception {
+    if (fritzbox == null)
+      fritzbox = FritzboxImpl.readFromProperties();
+
+    if (fritzbox == null) {
+      String msg = String.format(
+          "no %s found\nYou might want to create one see http://wiki.bitplan.com/index.php/Fritzbox-java-api#Configuration_File",
+          FritzboxImpl.getPropertyFile().getPath());
+      throw new Exception(msg);
+    }
+    if (debug) {
+      LOGGER.log(Level.INFO, String.format("Logging in to %s with username %s",
+          fritzbox.getUrl(), fritzbox.getUsername()));
+    }
+    return login();
+  }
+  
+  static FritzBoxSession instance=null;
+  public static FritzBoxSession getInstance() throws Exception {
+    if (instance==null) {
+      instance=new FritzBoxSessionImpl().createNewSession();
+    }
+    return instance;
   }
 
 }

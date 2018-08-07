@@ -44,7 +44,7 @@ public class CmdLine {
   // prepare a LOGGER
   protected static Logger LOGGER = Logger.getLogger("com.bitplan.fritzbox");
 
-  public static final String VERSION = "0.0.2";
+  public static final String VERSION = "0.0.3";
 
   @Option(name = "-d", aliases = {
       "--debug" }, usage = "debug\ncreate additional debug output if this switch is used")
@@ -137,21 +137,7 @@ public class CmdLine {
    * @throws Throwable 
    */
   public void doCommand() throws Throwable {
-    if (fritzbox == null)
-      fritzbox = FritzboxImpl.readFromProperties();
-
-    if (fritzbox == null) {
-      String msg = String.format(
-          "no %s found\nYou might want to create one see http://wiki.bitplan.com/index.php/Fritzbox-java-api#Configuration_File",
-          FritzboxImpl.getPropertyFile().getPath());
-      error(msg);
-      return;
-    }
-    if (debug) {
-      LOGGER.log(Level.INFO, String.format("Logging in to %s with username %s",
-          fritzbox.getUrl(), fritzbox.getUsername()));
-    }
-    FritzBoxSession session = fritzbox.login();
+    FritzBoxSession session=FritzBoxSessionImpl.getInstance();
     if (this.doGetCallList) {
       final CallList callList = new CallListImpl(session);
       List<Call> calls = callList.getCallList();
