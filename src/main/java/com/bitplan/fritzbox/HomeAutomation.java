@@ -24,48 +24,61 @@ import java.util.List;
 
 /**
  * Home Automation functions
- * see https://avm.de/fileadmin/user_upload/Global/Service/Schnittstellen/AHA-HTTP-Interface.pdf
+ * see
+ * https://avm.de/fileadmin/user_upload/Global/Service/Schnittstellen/AHA-HTTP-Interface.pdf
+ * 
  * @author wf
  *
  */
 public interface HomeAutomation {
   /**
    * getswitchlist
+   * 
    * @return list of all known switches
    * @throws Exception
    */
   public List<String> getSwitchList() throws Exception;
+
   /**
    * setswitchon / setswitchoff
+   * 
    * @param ain
    * @param newState
    * @return true if successful
-   * @throws Exception 
+   * @throws Exception
    */
   public String setSwitchOnOff(String ain, boolean newState) throws Exception;
+
   /**
    * getswitchstate
+   * 
    * @param ain
    * @return the switch state
    * @throws Exception
    */
-  public String getSwitchState(String ain) throws Exception;
+  public boolean getSwitchState(String ain) throws Exception;
+
   /**
    * getswitchpresent
+   * 
    * @param ain
    * @return whether the switch is present
    * @throws Exception
    */
   public String getSwitchPresent(String ain) throws Exception;
+
   /**
    * getswitchpower
+   * 
    * @param ain
    * @return the switch power
    * @throws Exception
    */
   public Double getSwitchPowerWatt(String ain) throws Exception;
+
   /**
    * getswitchenergy
+   * 
    * @param ain
    * @return the switch energy
    * @throws Exception
@@ -74,6 +87,7 @@ public interface HomeAutomation {
 
   /**
    * getswitchname
+   * 
    * @param ain
    * @return the switch name
    * @throws Exception
@@ -82,16 +96,27 @@ public interface HomeAutomation {
 
   /**
    * getdevicelistinfos
+   * 
    * @return the list of devices
    * @throws Exception
    */
   public DeviceList getDeviceListInfos() throws Exception;
-  
+
   /**
    * gettemperature
+   * 
    * @param ain
    * @return the temperature
    * @throws Exception
    */
   public Double getTemperature(String ain) throws Exception;
+
+  /**
+   * get the ain for the given devicename
+   * 
+   * @param deviceName
+   * @return the ain or null if not found
+   * @throws Exception
+   */
+  public String getAinForName(String deviceName) throws Exception;
 }

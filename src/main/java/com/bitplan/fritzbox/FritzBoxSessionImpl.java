@@ -199,7 +199,7 @@ public class FritzBoxSessionImpl
   }
 
   /**
-   * response handler (to be mocked in testcases)
+   * response handler (to be mocked in test cases)
    * 
    * @param relativeUrl
    * @param params

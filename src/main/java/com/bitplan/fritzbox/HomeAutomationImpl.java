@@ -85,9 +85,9 @@ public class HomeAutomationImpl implements HomeAutomation {
   }
   
   @Override
-  public String getSwitchState(String ain) throws Exception {
+  public boolean getSwitchState(String ain) throws Exception {
     String state=getResponse(ain, "getswitchstate");
-    return state;
+    return "1".equals(state);
   }
   
   @Override
@@ -127,6 +127,23 @@ public class HomeAutomationImpl implements HomeAutomation {
     String params=String.format("?switchcmd=%s&ain=%s",command,ain);
     String result=session.getResponse(BASE_URL, params); 
     return result;
+  }
+
+  /**
+   * get the ain for the given devicename
+   * @param deviceName
+   * @return the ain or null if not found
+   * @throws Exception 
+   */
+  public String getAinForName(String deviceName) throws Exception {
+    String ain=null;
+    DeviceList deviceList = getDeviceListInfos();
+    for (Device device : deviceList.devices) {
+      if (deviceName.equals(device.name)) {
+        ain = device.getAin();
+      }
+    }
+    return ain;
   }
 
 }

@@ -6,7 +6,7 @@
 	<artifactId>com.bitplan.fritzbox</artifactId>
 	<packaging>jar</packaging>
 	<name>BITPlan Java API for FritzBox HomeAutomation</name>
-	<version>0.0.3</version>
+	<version>0.0.4</version>
 	<description>Java library to call FritzBox HomeAutomation Api</description>
 	<url>https://github.com/BITPlan/com.bitplan.fritzbox</url>
 	<licenses>
