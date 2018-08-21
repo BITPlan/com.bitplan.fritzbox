@@ -8,8 +8,11 @@
 [![GitHub](https://img.shields.io/github/license/BITPlan/com.bitplan.fritzbox.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![BITPlan](http://wiki.bitplan.com/images/wiki/thumb/3/38/BITPlanLogoFontLessTransparent.png/198px-BITPlanLogoFontLessTransparent.png)](http://www.bitplan.com)
 
-### Project pages
-[com.bitplan.fritzbox](https://BITPlan.github.io/com.bitplan.fritzbox)
+### Documentation
+* [Wiki](http://wiki.bitplan.com/index.php/Fritzbox-java-api)
+* [com.bitplan.fritzbox Project pages](https://BITPlan.github.io/com.bitplan.fritzbox)
+* [Javadoc](https://BITPlan.github.io/com.bitplan.fritzbox/apidocs/index.html)
+* [Test-Report](https://BITPlan.github.io/com.bitplan.fritzbox/surefire-report.html)
 
 ### Maven dependency
 
