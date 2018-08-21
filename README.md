@@ -1,5 +1,5 @@
 ### com.bitplan.fritzbox
-[Java API for AVM FritzBox Homeautomation see [AHA-HTTP-Interface.pdf](https://avm.de/fileadmin/user_upload/Global/Service/Schnittstellen/AHA-HTTP-Interface.pdf)](http://wiki.bitplan.com/index.php/Fritzbox-java-api) 
+[Java API for AVM FritzBox Homeautomation](http://wiki.bitplan.com/index.php/Fritzbox-java-api) 
 
 [![Travis (.org)](https://img.shields.io/travis/BITPlan/com.bitplan.fritzbox.svg)](https://travis-ci.org/BITPlan/com.bitplan.fritzbox)
 [![Maven Central](https://img.shields.io/maven-central/v/com.bitplan/com.bitplan.fritzbox.svg)](https://search.maven.org/artifact/com.bitplan/com.bitplan.fritzbox/0.0.4/jar)

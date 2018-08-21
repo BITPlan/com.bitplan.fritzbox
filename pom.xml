@@ -14,7 +14,7 @@
 	<packaging>jar</packaging>
 	<name>BITPlan Java API for FritzBox HomeAutomation</name>
 	<version>0.0.4</version>
-	<description>Java API for AVM FritzBox Homeautomation see [AHA-HTTP-Interface.pdf](https://avm.de/fileadmin/user_upload/Global/Service/Schnittstellen/AHA-HTTP-Interface.pdf)</description>
+	<description>Java API for AVM FritzBox Homeautomation</description>
 	<url>https://github.com/BITPlan/com.bitplan.fritzbox</url>
 	<properties>
 		<!-- for parent pom to work -->
