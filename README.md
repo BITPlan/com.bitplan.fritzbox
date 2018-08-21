@@ -1,26 +1,28 @@
-# com.bitplan.fritzbox
-Java API for AVM FritzBox Homeautomation
-see https://avm.de/fileadmin/user_upload/Global/Service/Schnittstellen/AHA-HTTP-Interface.pdf
+### com.bitplan.fritzbox
+[Java API for AVM FritzBox Homeautomation see [AHA-HTTP-Interface.pdf](https://avm.de/fileadmin/user_upload/Global/Service/Schnittstellen/AHA-HTTP-Interface.pdf)](http://wiki.bitplan.com/index.php/Fritzbox-java-api) 
 
-[![Build Status](https://travis-ci.org/BITPlan/com.bitplan.fritzbox.svg?branch=master)](https://travis-ci.org/BITPlan/com.bitplan.fritzbox)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.bitplan/com.bitplan.fritzbox/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.bitplan/com.bitplan.fritzbox)
+[![Travis (.org)](https://img.shields.io/travis/BITPlan/com.bitplan.fritzbox.svg)](https://travis-ci.org/BITPlan/com.bitplan.fritzbox)
+[![Maven Central](https://img.shields.io/maven-central/v/com.bitplan/com.bitplan.fritzbox.svg)](https://search.maven.org/artifact/com.bitplan/com.bitplan.fritzbox/0.0.4/jar)
+[![GitHub issues](https://img.shields.io/github/issues/BITPlan/com.bitplan.fritzbox.svg)](https://github.com/BITPlan/com.bitplan.fritzbox/issues)
+[![GitHub issues](https://img.shields.io/github/issues-closed/BITPlan/com.bitplan.fritzbox.svg)](https://github.com/BITPlan/com.bitplan.fritzbox/issues/?q=is%3Aissue+is%3Aclosed)
+[![GitHub](https://img.shields.io/github/license/BITPlan/com.bitplan.fritzbox.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+[![BITPlan](http://wiki.bitplan.com/images/wiki/thumb/3/38/BITPlanLogoFontLessTransparent.png/198px-BITPlanLogoFontLessTransparent.png)](http://www.bitplan.com)
 
-### Documentation
-http://wiki.bitplan.com/index.php/Fritzbox-java-api
+### Project pages
+[com.bitplan.fritzbox](https://BITPlan.github.io/com.bitplan.fritzbox)
 
-### Distribution
-Available at Maven Central see 
-https://search.maven.org/#artifactdetails%7Ccom.bitplan%7Ccom.bitplan.fritzbox%7C0.0.4%7Cjar
+### Maven dependency
 
-Maven dependency:
-
+Maven dependency
 ```xml
 <dependency>
-	<groupId>com.bitplan.</groupId>
-	<artifactId>com.bitplan.fritzbox</artifactId>
-	<version>0.0.4</version>
+  <groupId>com.bitplan</groupId>
+  <artifactId>com.bitplan.fritzbox</artifactId>
+  <version>0.0.4</version>
 </dependency>
 ```
+
+[Current release at repo1.maven.org](http://repo1.maven.org/maven2/com/bitplan/com.bitplan.fritzbox/0.0.4/)
 
 ### How to build
 ```
@@ -28,7 +30,6 @@ git clone https://github.com/BITPlan/com.bitplan.fritzbox
 cd com.bitplan.fritzbox
 mvn install
 ```
-
 ## Version history
 * 0.0.1: 2018-08-04 First release via GitHub / Maven central
 * 0.0.2: 2018-08-07 adds call list option
