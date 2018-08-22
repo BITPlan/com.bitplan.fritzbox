@@ -87,6 +87,7 @@
 			run with mvn clean compile assembly:single -->
 		<plugin>
 			<artifactId>maven-assembly-plugin</artifactId>
+			<version>${maven-assembly-plugin.version}</version>
 			<configuration>
 				<archive>
 					<manifest>
@@ -111,7 +112,7 @@
 		<plugin>
 			<groupId>com.akathist.maven.plugins.launch4j</groupId>
 			<artifactId>launch4j-maven-plugin</artifactId>
-			<version>1.7.22</version>
+			<version>${launch4j-maven-plugin.version}</version>
 			<executions>
 				<execution>
 					<id>l4j-gui</id>
@@ -165,6 +166,7 @@
 			https://stackoverflow.com/a/16862404/1497139 -->
 		<plugin>
 			<artifactId>maven-antrun-plugin</artifactId>
+			<version>${maven-antrun-plugin.version}</version>
 			<configuration>
 				<tasks>
 					<copy
