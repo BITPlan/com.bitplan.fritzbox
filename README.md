@@ -13,7 +13,6 @@
 * [com.bitplan.fritzbox Project pages](https://BITPlan.github.io/com.bitplan.fritzbox)
 * [Javadoc](https://BITPlan.github.io/com.bitplan.fritzbox/apidocs/index.html)
 * [Test-Report](https://BITPlan.github.io/com.bitplan.fritzbox/surefire-report.html)
-
 ### Maven dependency
 
 Maven dependency
