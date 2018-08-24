@@ -13,7 +13,7 @@
 	<artifactId>com.bitplan.fritzbox</artifactId>
 	<packaging>jar</packaging>
 	<name>BITPlan Java API for FritzBox HomeAutomation</name>
-	<version>0.0.4</version>
+	<version>0.0.5</version>
 	<description>Java API for AVM FritzBox Homeautomation</description>
 	<url>https://github.com/BITPlan/com.bitplan.fritzbox</url>
 	<properties>

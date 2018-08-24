@@ -20,6 +20,11 @@
  */
 package com.bitplan.fritzbox;
 
+/**
+ * interface to create a new session
+ * @author wf
+ *
+ */
 public interface FritzBoxSessionBuilder {
   public FritzBoxSession createNewSession() throws Exception;
 }

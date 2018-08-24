@@ -125,8 +125,11 @@ public class FritzBoxSessionImpl
     this.fritzbox = pFritzbox;
   }
 
-  @Override
-  public FritzBoxSession login() {
+  /**
+   * login in and return the session
+   * @return - the session
+   */
+  protected FritzBoxSession login() {
     try {
       sessionInfo = this.getSessionInfo("");
       String challengeResponse = sessionInfo.Challenge + "-"
@@ -255,8 +258,8 @@ public class FritzBoxSessionImpl
     return response;
   }
 
-  @Override
-  public void logout() {
+
+  protected void logout() {
     this.sessionInfo = null;
   }
 
@@ -290,6 +293,17 @@ public class FritzBoxSessionImpl
       instance=new FritzBoxSessionImpl().createNewSession();
     }
     return instance;
+  }
+
+  @Override
+  public FritzBoxSession connect() {
+    return login();
+  }
+
+  @Override
+  public void close() {
+    logout();
+    instance=null;
   }
 
 }

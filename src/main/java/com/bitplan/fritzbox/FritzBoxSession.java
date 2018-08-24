@@ -28,15 +28,15 @@ package com.bitplan.fritzbox;
  */
 public interface FritzBoxSession {
   /**
-   * login 
+   * login if needed
    * @return the session
    */
-  public FritzBoxSession login();
-
+  public FritzBoxSession connect();
+  
   /**
-   * log out
+   * logout
    */
-  public void logout();
+  public void close();
   
   /**
    * get the md5 for the given input

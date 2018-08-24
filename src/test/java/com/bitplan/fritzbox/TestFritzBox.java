@@ -70,7 +70,7 @@ public class TestFritzBox extends Basetest {
     FritzBoxSession lsession = getFritzBox();
     assertNotNull(lsession);
     if (lsession != null) {
-      lsession.logout();
+      lsession.close();
       session = null;
     }
   }

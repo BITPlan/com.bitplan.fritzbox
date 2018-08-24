@@ -137,7 +137,7 @@ public class CmdLine {
    * @throws Throwable 
    */
   public void doCommand() throws Throwable {
-    FritzBoxSession session=FritzBoxSessionImpl.getInstance();
+    FritzBoxSession session=FritzBoxSessionImpl.getInstance().connect();
     if (this.doGetCallList) {
       final CallAPI callList = new CallAPIImpl(session);
       List<Call> calls = callList.getCallList();
@@ -160,11 +160,6 @@ public class CmdLine {
       if (debug) {
         LOGGER.log(Level.INFO,
             String.format("Found %3d device ids: %s", ids.size(), ids));
-      }
-
-      if (deviceList.devices.isEmpty()) {
-        session.logout();
-        return;
       }
 
       if (listDevices) {
@@ -225,6 +220,7 @@ public class CmdLine {
         homeAutomation.setSwitchOnOff(ain, newState);
       }
     }
+    session.close();
   }
 
   /**
