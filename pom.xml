@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.bitplan.pom</groupId>
 		<artifactId>com.bitplan.pom</artifactId>
-		<version>0.0.9</version>
+		<version>0.0.11</version>
 		<relativePath>../com.bitplan.pom/pom.xml</relativePath> 
 	</parent>
 	<groupId>com.bitplan</groupId>
@@ -22,35 +22,28 @@
 		<!-- for README.md generation -->
 		<documentation.wiki>http://wiki.bitplan.com/index.php/Fritzbox-java-api</documentation.wiki>
 		<!-- versions of other libraries to be used -->
-		<junit4.version>4.11</junit4.version>
-		<commons.io.version>2.4</commons.io.version>
-		<commons.version>3.4</commons.version>
 	</properties>
 	<dependencies>
 		<!-- commons io -->
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>${commons.io.version}</version>
 		</dependency>
 		<!-- JUnit testing -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>${junit4.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<!-- args4j command line utility -->
 		<dependency>
 			<groupId>args4j</groupId>
 			<artifactId>args4j</artifactId>
-			<version>${args4j.version}</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>${commons.version}</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
 		<dependency>

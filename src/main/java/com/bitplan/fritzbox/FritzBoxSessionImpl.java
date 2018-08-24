@@ -63,7 +63,7 @@ public class FritzBoxSessionImpl
   private static final String DEFAULT_SESSION_ID = "0000000000000000";
   private Fritzbox fritzbox;
   Charset UTF_16LE = Charset.forName("utf-16le");
-  private SessionInfo sessionInfo;
+  private SessionInfo sessionInfo = null;
   // set to true to create new mockito statements
   public static boolean domockito = false;
 
@@ -127,6 +127,7 @@ public class FritzBoxSessionImpl
 
   /**
    * login in and return the session
+   * 
    * @return - the session
    */
   protected FritzBoxSession login() {
@@ -258,7 +259,6 @@ public class FritzBoxSessionImpl
     return response;
   }
 
-
   protected void logout() {
     this.sessionInfo = null;
   }
@@ -286,24 +286,29 @@ public class FritzBoxSessionImpl
     }
     return login();
   }
-  
-  static FritzBoxSession instance=null;
+
+  static FritzBoxSession instance = null;
+
   public static FritzBoxSession getInstance() throws Exception {
-    if (instance==null) {
-      instance=new FritzBoxSessionImpl().createNewSession();
+    if (instance == null) {
+      instance = new FritzBoxSessionImpl().createNewSession();
     }
     return instance;
   }
 
   @Override
   public FritzBoxSession connect() {
-    return login();
+    if (this.sessionInfo != null)
+      return this;
+    else
+      return login();
   }
 
   @Override
   public void close() {
-    logout();
-    instance=null;
+    if (this.sessionInfo != null)
+      logout();
+    instance = null;
   }
 
 }
