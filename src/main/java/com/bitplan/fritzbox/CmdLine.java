@@ -65,7 +65,7 @@ public class CmdLine {
   List<String> readDevices = new ArrayList<>();
 
   @Option(name = "-s", handler = StringArrayOptionHandler.class, aliases = {
-      "--set" }, usage = "set\nset the given devices to the givnen states e.g. main off")
+      "--set" }, usage = "set\nset the given devices to the given states e.g. main off")
   List<String> setDevices = new ArrayList<>();
 
   @Option(name = "-v", aliases = {
