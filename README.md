@@ -3,6 +3,7 @@
 
 [![Travis (.org)](https://img.shields.io/travis/BITPlan/com.bitplan.fritzbox.svg)](https://travis-ci.org/BITPlan/com.bitplan.fritzbox)
 [![Maven Central](https://img.shields.io/maven-central/v/com.bitplan/com.bitplan.fritzbox.svg)](https://search.maven.org/artifact/com.bitplan/com.bitplan.fritzbox/0.0.5/jar)
+
 [![GitHub issues](https://img.shields.io/github/issues/BITPlan/com.bitplan.fritzbox.svg)](https://github.com/BITPlan/com.bitplan.fritzbox/issues)
 [![GitHub issues](https://img.shields.io/github/issues-closed/BITPlan/com.bitplan.fritzbox.svg)](https://github.com/BITPlan/com.bitplan.fritzbox/issues/?q=is%3Aissue+is%3Aclosed)
 [![GitHub](https://img.shields.io/github/license/BITPlan/com.bitplan.fritzbox.svg)](https://www.apache.org/licenses/LICENSE-2.0)
@@ -25,7 +26,7 @@ Maven dependency
 </dependency>
 ```
 
-[Current release at repo1.maven.org](http://repo1.maven.org/maven2/com/bitplan/com.bitplan.fritzbox/0.0.5/)
+[Current release at repo1.maven.org](https://repo1.maven.org/maven2/com/bitplan/com.bitplan.fritzbox/0.0.5/)
 
 ### How to build
 ```
