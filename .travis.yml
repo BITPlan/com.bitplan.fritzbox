@@ -1,4 +1,8 @@
 # this is a java project using maven
 language: java
+#
+# Java 8 - what else?
+#
+jdk: openjdk8
 # switch off gpg handling
 install: mvn install -Dgpg.skip=true
